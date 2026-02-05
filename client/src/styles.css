@@ -1106,6 +1106,36 @@ tbody tr:hover {
   color: var(--muted);
 }
 
+.war-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.save-btn {
+  min-width: 200px;
+  font-size: 14px;
+  padding: 12px 20px;
+}
+
+.save-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(74, 222, 128, 0.15);
+  border: 1px solid rgba(74, 222, 128, 0.5);
+  border-radius: 10px;
+  color: var(--success);
+  font-weight: 700;
+  font-size: 14px;
+  animation: fadeInUp var(--duration-normal) var(--ease-out);
+}
 .empty-cell {
   text-align: center;
   padding: 20px;

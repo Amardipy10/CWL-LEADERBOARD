@@ -96,6 +96,9 @@ export default function App() {
   const [error, setError] = useState("");
   const [newName, setNewName] = useState("");
   const [busyWar, setBusyWar] = useState(null);
+  const [savingWar, setSavingWar] = useState(null);
+  const [savedWar, setSavedWar] = useState(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState({});
 
   const [clans, setClans] = useState([]);
   const [publicSearch, setPublicSearch] = useState("");
@@ -285,28 +288,21 @@ export default function App() {
   };
 
   const updateWar = async (playerId, warIndex, war) => {
-    try {
-      const res = await authFetch(`/api/players/${playerId}/war/${warIndex}`, {
-        method: "PUT",
-        body: JSON.stringify(war)
-      });
-      const payload = await res.json();
-      if (!res.ok) {
-        throw new Error(payload.error || "Failed to update war data");
-      }
-      setPlayers((prev) =>
-        prev.map((player) => (player._id === payload._id ? payload : player))
-      );
-    } catch (err) {
-      setError(err.message || "Unable to update war data");
+    const res = await authFetch(`/api/players/${playerId}/war/${warIndex}`, {
+      method: "PUT",
+      body: JSON.stringify(war)
+    });
+    const payload = await res.json();
+    if (!res.ok) {
+      throw new Error(payload.error || "Failed to update war data");
     }
+    return payload;
   };
 
+  // Only update local state - no API call
   const handleWarFieldChange = (playerId, warIndex, field, rawValue) => {
     const max = field.includes("Stars") ? 3 : 100;
     const value = clampNumber(rawValue, 0, max);
-
-    let updatedWar = null;
 
     setPlayers((prev) =>
       prev.map((player) => {
@@ -318,13 +314,47 @@ export default function App() {
         );
         const war = { ...wars[warIndex], [field]: value };
         wars[warIndex] = war;
-        updatedWar = war;
         return { ...player, wars };
       })
     );
 
-    if (updatedWar) {
-      updateWar(playerId, warIndex, updatedWar);
+    // Mark this war as having unsaved changes
+    setHasUnsavedChanges((prev) => ({ ...prev, [warIndex]: true }));
+    setSavedWar(null); // Clear any saved message
+  };
+
+  // Save all war data for a specific war index
+  const saveAllWarData = async (warIndex) => {
+    setSavingWar(warIndex);
+    setError("");
+    setSavedWar(null);
+
+    try {
+      const promises = players.map((player) => {
+        const war = normalizeWar(player.wars?.[warIndex]);
+        return updateWar(player._id, warIndex, war);
+      });
+
+      const results = await Promise.all(promises);
+
+      // Update players with saved data from server
+      setPlayers((prev) =>
+        prev.map((player) => {
+          const updated = results.find((r) => r._id === player._id);
+          return updated || player;
+        })
+      );
+
+      // Mark as saved
+      setHasUnsavedChanges((prev) => ({ ...prev, [warIndex]: false }));
+      setSavedWar(warIndex);
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setSavedWar(null), 3000);
+    } catch (err) {
+      setError(err.message || "Unable to save war data");
+    } finally {
+      setSavingWar(null);
     }
   };
 
@@ -765,7 +795,7 @@ export default function App() {
                 <img className="section-icon" src={swords} alt="" aria-hidden="true" />
                 <h2>War Data Entry</h2>
               </div>
-              <p>Enter stats for each war. Values update the leaderboard immediately.</p>
+              <p>Enter stats for each war, then click "Save & Update Leaderboard" to save.</p>
             </div>
 
             {Array.from({ length: WAR_COUNT }, (_, idx) => (
@@ -908,6 +938,22 @@ export default function App() {
                       )}
                     </tbody>
                   </table>
+                </div>
+
+                <div className="war-actions">
+                  {savedWar === idx && (
+                    <div className="save-success">
+                      ✓ War {idx + 1} data saved successfully!
+                    </div>
+                  )}
+                  <button
+                    type="button"
+                    className="btn gold save-btn"
+                    onClick={() => saveAllWarData(idx)}
+                    disabled={savingWar === idx || players.length === 0}
+                  >
+                    {savingWar === idx ? "Saving..." : "Save & Update Leaderboard"}
+                  </button>
                 </div>
               </details>
             ))}
