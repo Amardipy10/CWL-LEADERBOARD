@@ -88,56 +88,6 @@ The application will be available at:
 
 ---
 
-## 🚀 Production Deployment
-
-### Deploying Backend to Render
-
-1. Go to [Render Dashboard](https://dashboard.render.com)
-2. Click **"New +"** → **"Web Service"**
-3. Connect your GitHub repository
-4. Configure the service:
-   - **Name:** `cwl-leaderboard-api`
-   - **Root Directory:** `server`
-   - **Runtime:** `Node`
-   - **Build Command:** `npm install`
-   - **Start Command:** `npm start`
-5. Add environment variables:
-   | Key | Value |
-   |-----|-------|
-   | `NODE_ENV` | `production` |
-   | `MONGO_URI` | Your MongoDB Atlas connection string |
-   | `JWT_SECRET` | A secure random string |
-   | `FRONTEND_URL` | Your Vercel frontend URL (e.g., `https://your-app.vercel.app`) |
-
-6. Click **"Create Web Service"**
-7. Copy your Render URL (e.g., `https://cwl-leaderboard-api.onrender.com`)
-
-### Deploying Frontend to Vercel
-
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
-2. Click **"Add New..."** → **"Project"**
-3. Import your GitHub repository
-4. Configure the project:
-   - **Root Directory:** `client`
-   - **Framework Preset:** `Vite`
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
-5. Add environment variable:
-   | Key | Value |
-   |-----|-------|
-   | `VITE_API_BASE` | Your Render backend URL (e.g., `https://cwl-leaderboard-api.onrender.com`) |
-
-6. Click **"Deploy"**
-
-### Post-Deployment
-
-After deploying both services:
-1. Go back to **Render** → Your service → **Environment**
-2. Update `FRONTEND_URL` with your actual Vercel URL
-3. Click **"Save Changes"** to trigger a redeploy
-
----
-
 ## 📁 Project Structure
 
 ```
