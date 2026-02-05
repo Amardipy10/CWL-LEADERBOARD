@@ -1,0 +1,33 @@
+<svg width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold" x1="40" y1="20" x2="280" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F9D27D" />
+      <stop offset="0.55" stop-color="#E0A64B" />
+      <stop offset="1" stop-color="#B97727" />
+    </linearGradient>
+    <linearGradient id="ember" x1="70" y1="40" x2="260" y2="260" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4A1F10" />
+      <stop offset="1" stop-color="#2A120A" />
+    </linearGradient>
+  </defs>
+  <path
+    d="M160 18 L268 72 L250 198 L160 302 L70 198 L52 72 Z"
+    fill="url(#gold)"
+    stroke="#5B3718"
+    stroke-width="6"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M160 52 L236 92 L222 186 L160 262 L98 186 L84 92 Z"
+    fill="url(#ember)"
+    stroke="#F3C16D"
+    stroke-width="3"
+    stroke-linejoin="round"
+  />
+  <circle cx="160" cy="152" r="46" fill="#1B0E08" stroke="#F3C16D" stroke-width="4" />
+  <path
+    d="M160 112 L171 142 L204 142 L177 160 L186 192 L160 174 L134 192 L143 160 L116 142 L149 142 Z"
+    fill="#F9D27D"
+  />
+  <text x="160" y="250" text-anchor="middle" font-family="serif" font-size="32" fill="#F9D27D">CWL</text>
+</svg>
