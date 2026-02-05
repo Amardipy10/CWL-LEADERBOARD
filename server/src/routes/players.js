@@ -144,6 +144,7 @@ router.put("/:id/war/:warIndex", async (req, res, next) => {
     }
 
     player.wars[warIndex] = war;
+    player.markModified('wars'); // Tell Mongoose the array was modified
     await player.save();
 
     res.json(player);
